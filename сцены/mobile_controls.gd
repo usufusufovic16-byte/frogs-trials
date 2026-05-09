@@ -1,17 +1,16 @@
 extends CanvasLayer
 
-const JOYSTICK_RADIUS := 80.0
-const KNOB_RADIUS     := 34.0
-const JUMP_RADIUS     := 56.0
+const JOYSTICK_RADIUS := 140.0
+const KNOB_RADIUS     := 55.0
+const JUMP_RADIUS     := 80.0
+const DEADZONE        := 0.18
 
-# Joystick state
 var _joy_idx    : int     = -1
 var _joy_base   : Vector2
 var _joy_knob   : Vector2
 var _joy_left   : bool    = false
 var _joy_right  : bool    = false
 
-# Jump button state
 var _jump_idx     : int  = -1
 var _jump_pressed : bool = false
 var _jump_center  : Vector2
@@ -24,11 +23,9 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 	var vs := get_viewport().get_visible_rect().size
-	_jump_center = Vector2(vs.x - 100.0, vs.y - 100.0)
-
-	# Placeholder so joystick draws somewhere before first touch
-	_joy_base = Vector2(110.0, vs.y - 110.0)
-	_joy_knob = _joy_base
+	_jump_center = Vector2(vs.x - 130.0, vs.y - 130.0)
+	_joy_base    = Vector2(160.0, vs.y - 160.0)
+	_joy_knob    = _joy_base
 
 	_canvas = Control.new()
 	_canvas.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -48,13 +45,11 @@ func _on_touch(ev: InputEventScreenTouch) -> void:
 	var vs := get_viewport().get_visible_rect().size
 
 	if ev.pressed:
-		# Jump button — right half, near the button circle
 		if _jump_idx == -1 and ev.position.x > vs.x * 0.5:
 			_jump_idx     = ev.index
 			_jump_pressed = true
 			Input.action_press("ui_accept")
 
-		# Joystick — left half
 		elif _joy_idx == -1 and ev.position.x <= vs.x * 0.5:
 			_joy_idx  = ev.index
 			_joy_base = ev.position
@@ -63,6 +58,10 @@ func _on_touch(ev: InputEventScreenTouch) -> void:
 		if ev.index == _joy_idx:
 			_release_joystick()
 		elif ev.index == _jump_idx:
+			_release_jump()
+		else:
+			# Safety: если индекс потерян — сбросить всё
+			_release_joystick()
 			_release_jump()
 
 	_canvas.queue_redraw()
@@ -79,14 +78,14 @@ func _on_drag(ev: InputEventScreenDrag) -> void:
 	_joy_knob = _joy_base + delta
 
 	var axis := delta.x / JOYSTICK_RADIUS
-	if axis < -0.2:
+	if axis < -DEADZONE:
 		if not _joy_left:
 			_joy_left = true
 			Input.action_press("ui_left")
 		if _joy_right:
 			_joy_right = false
 			Input.action_release("ui_right")
-	elif axis > 0.2:
+	elif axis > DEADZONE:
 		if not _joy_right:
 			_joy_right = true
 			Input.action_press("ui_right")
@@ -121,26 +120,27 @@ func _release_jump() -> void:
 
 
 func _draw_hud() -> void:
-	# ── Joystick ─────────────────────────────────────────────────────────────
-	_canvas.draw_circle(_joy_base, JOYSTICK_RADIUS, Color(1, 1, 1, 0.12))
-	_canvas.draw_arc(_joy_base, JOYSTICK_RADIUS, 0.0, TAU, 64, Color(1, 1, 1, 0.35), 2.5)
-	var knob_color := Color(1, 1, 1, 0.6) if _joy_idx != -1 else Color(1, 1, 1, 0.35)
-	_canvas.draw_circle(_joy_knob, KNOB_RADIUS, knob_color)
+	var joy_alpha  := 0.9 if _joy_idx  != -1 else 0.5
+	var jump_alpha := 0.9 if _jump_pressed     else 0.5
 
-	# ── Jump button ───────────────────────────────────────────────────────────
-	var fill_col := Color(0.4, 0.85, 1.0, 0.5) if _jump_pressed else Color(0.3, 0.7, 1.0, 0.22)
-	var ring_col := Color(0.5, 0.9, 1.0, 0.8) if _jump_pressed else Color(0.5, 0.9, 1.0, 0.5)
-	_canvas.draw_circle(_jump_center, JUMP_RADIUS, fill_col)
-	_canvas.draw_arc(_jump_center, JUMP_RADIUS, 0.0, TAU, 64, ring_col, 2.5)
+	# Joystick base
+	_canvas.draw_circle(_joy_base, JOYSTICK_RADIUS, Color(1, 1, 1, joy_alpha * 0.35))
+	_canvas.draw_arc(_joy_base, JOYSTICK_RADIUS, 0.0, TAU, 64, Color(1, 1, 1, joy_alpha), 2.5)
+	_canvas.draw_circle(_joy_knob, KNOB_RADIUS, Color(1, 1, 1, joy_alpha))
 
-	# Arrow up inside jump button
+	# Jump button
+	_canvas.draw_circle(_jump_center, JUMP_RADIUS, Color(0.4, 0.85, 1.0, jump_alpha * 0.55))
+	_canvas.draw_arc(_jump_center, JUMP_RADIUS, 0.0, TAU, 64, Color(0.5, 0.9, 1.0, jump_alpha), 2.5)
+
+	# Arrow up inside jump button (scaled for JUMP_RADIUS=80)
+	var s := JUMP_RADIUS / 56.0  # scale relative to original 56px radius
 	var arrow := PackedVector2Array([
-		_jump_center + Vector2(0, -28),
-		_jump_center + Vector2(-18, -4),
-		_jump_center + Vector2(-7, -4),
-		_jump_center + Vector2(-7, 20),
-		_jump_center + Vector2(7, 20),
-		_jump_center + Vector2(7, -4),
-		_jump_center + Vector2(18, -4),
+		_jump_center + Vector2(0,   -28) * s,
+		_jump_center + Vector2(-18,  -4) * s,
+		_jump_center + Vector2(-7,   -4) * s,
+		_jump_center + Vector2(-7,   20) * s,
+		_jump_center + Vector2(7,    20) * s,
+		_jump_center + Vector2(7,    -4) * s,
+		_jump_center + Vector2(18,   -4) * s,
 	])
-	_canvas.draw_colored_polygon(arrow, Color(1, 1, 1, 0.75))
+	_canvas.draw_colored_polygon(arrow, Color(1, 1, 1, jump_alpha * 0.9))

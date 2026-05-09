@@ -11,14 +11,18 @@ config_version=5
 [application]
 
 config/name="Frog's Trials"
-run/main_scene="uid://i2w7lld8rfib"
+run/main_scene="res://Splash.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="uid://d3q013mohhwnd"
 config/windows_native_icon="res://parcour_frog1.ico"
+boot_splash/show_image=false
+boot_splash/bg_color=Color(0, 0, 0, 1)
 
 [display]
 
 window/size/mode=4
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [global_group]
 
