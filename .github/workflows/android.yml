@@ -59,12 +59,12 @@ jobs:
 
       - name: Import project assets
         run: |
-          DISPLAY=:99 godot --path "$GITHUB_WORKSPACE" --editor --quit 2>&1 || true
+          godot --headless --path "$GITHUB_WORKSPACE" --editor --quit 2>&1 || true
 
       - name: Export Android APK
         run: |
           mkdir -p "$GITHUB_WORKSPACE/build"
-          DISPLAY=:99 godot --path "$GITHUB_WORKSPACE" --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
+          DISPLAY=:99 timeout 300 godot --path "$GITHUB_WORKSPACE" --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
           ls -la "$GITHUB_WORKSPACE/build/"
 
       - name: Upload APK
