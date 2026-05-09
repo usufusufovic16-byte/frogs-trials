@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://6yj3hhu21x4h"]
+
+[ext_resource type="Script" uid="uid://cusenr4ndmn5p" path="res://saw.gd" id="1_ve25x"]
+[ext_resource type="Texture2D" uid="uid://c70bm1m024s7u" path="res://Free/Traps/Saw/On (38x38).png" id="2_jl2tc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pc5xk"]
+atlas = ExtResource("2_jl2tc")
+region = Rect2(0, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_540f5"]
+atlas = ExtResource("2_jl2tc")
+region = Rect2(38, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c73yf"]
+atlas = ExtResource("2_jl2tc")
+region = Rect2(76, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dru74"]
+atlas = ExtResource("2_jl2tc")
+region = Rect2(114, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8t5ih"]
+atlas = ExtResource("2_jl2tc")
+region = Rect2(152, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kb316"]
+atlas = ExtResource("2_jl2tc")
+region = Rect2(190, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_76go7"]
+atlas = ExtResource("2_jl2tc")
+region = Rect2(228, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dqaod"]
+atlas = ExtResource("2_jl2tc")
+region = Rect2(266, 0, 38, 38)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_h0ag5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pc5xk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_540f5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c73yf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dru74")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8t5ih")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kb316")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_76go7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dqaod")
+}],
+"loop": true,
+"name": &"on",
+"speed": 10.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ve25x"]
+radius = 20.924051
+height = 43.772152
+
+[node name="Saw" type="Area2D" unique_id=822758276]
+script = ExtResource("1_ve25x")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1852157578]
+position = Vector2(0.12500048, -0.7499994)
+scale = Vector2(1.0460527, 1.0394737)
+sprite_frames = SubResource("SpriteFrames_h0ag5")
+animation = &"on"
+autoplay = "on"
+frame = 7
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1441740097]
+position = Vector2(0.12500048, -0.7499994)
+scale = Vector2(1.0460527, 1.0394737)
+shape = SubResource("CapsuleShape2D_ve25x")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

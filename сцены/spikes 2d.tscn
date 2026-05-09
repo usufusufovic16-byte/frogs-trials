@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bsbfldh5oq2w8"]
+
+[ext_resource type="Script" uid="uid://djat14cmmv66t" path="res://сцены/spikes_2d.gd" id="1_gs4bq"]
+[ext_resource type="Texture2D" uid="uid://tbrhuknpb2ae" path="res://Free/Traps/Spikes/Idle.png" id="2_xn3ow"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gs4bq"]
+radius = 10.666667
+height = 21.333334
+
+[node name="шипы" type="Area2D" unique_id=1658283832]
+script = ExtResource("1_gs4bq")
+
+[node name="game" type="Sprite2D" parent="." unique_id=74455475]
+position = Vector2(1.1249996, 1.1249996)
+scale = Vector2(1.359375, 1.359375)
+texture = ExtResource("2_xn3ow")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=637603973]
+position = Vector2(0, 5)
+scale = Vector2(1.21875, 1.21875)
+shape = SubResource("CapsuleShape2D_gs4bq")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

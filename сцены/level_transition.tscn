@@ -1,0 +1,31 @@
+[gd_scene format=4 uid="uid://bvg3dm7hn7w41"]
+
+[ext_resource type="Script" path="res://сцены/level_transition.gd" id="1_lt"]
+
+[node name="LevelTransition" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_lt")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CenterContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 72
+text = "LEVEL 2"
+horizontal_alignment = 1
+vertical_alignment = 1

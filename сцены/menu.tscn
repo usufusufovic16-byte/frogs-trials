@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cahanj36v3e5q"]
+
+[ext_resource type="Texture2D" uid="uid://ctjm0uyn4p7wr" path="res://Free/Background/Green.png" id="1_08co1"]
+
+[node name="menu" type="Control" unique_id=664175]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 5247.0
+offset_bottom = 2621.0
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1495719017]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -6352.0
+offset_top = -3795.0
+offset_right = 6044.0
+offset_bottom = 4049.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_08co1")

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://guaqm8fxy81a"]
+
+[ext_resource type="Script" path="res://сцены/portal_preview.gd" id="1_pp"]
+[ext_resource type="Texture2D" uid="uid://dq1cn1mxfabdv" path="res://Gemini_Generated_Image_rfqb0qrfqb0qrfqb-no-bg-preview (carve.photos).png" id="2_urxle"]
+
+[node name="PortalPreview" type="Node2D" unique_id=147637964]
+script = ExtResource("1_pp")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=524834285]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_urxle")

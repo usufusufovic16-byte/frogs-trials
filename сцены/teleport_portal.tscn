@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dgmyuuf6mc1po"]
+
+[ext_resource type="Texture2D" uid="uid://dq1cn1mxfabdv" path="res://Gemini_Generated_Image_rfqb0qrfqb0qrfqb-no-bg-preview (carve.photos).png" id="1_portal_tex"]
+
+[node name="TeleportPortal" type="Node2D" unique_id=1999045671]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=753155797]
+position = Vector2(1.1920929e-07, -1.1368684e-13)
+scale = Vector2(0.2683594, 0.24298245)
+texture = ExtResource("1_portal_tex")

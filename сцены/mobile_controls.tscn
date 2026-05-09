@@ -1,0 +1,6 @@
+[gd_scene format=4 uid="uid://mobile_controls_v1"]
+
+[ext_resource type="Script" path="res://сцены/mobile_controls.gd" id="1_mc"]
+
+[node name="MobileControls" type="CanvasLayer"]
+script = ExtResource("1_mc")

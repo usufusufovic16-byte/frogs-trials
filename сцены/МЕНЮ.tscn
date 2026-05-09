@@ -1,0 +1,165 @@
+[gd_scene format=3 uid="uid://i2w7lld8rfib"]
+
+[ext_resource type="Script" uid="uid://oogo5230ofqc" path="res://scripts/main_menu.gd" id="1_menu_script"]
+[ext_resource type="Texture2D" uid="uid://ctjm0uyn4p7wr" path="res://Free/Background/Green.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://cy53gaup7hnyw" path="res://Free/Menu/Buttons/Play.png" id="3_play"]
+[ext_resource type="Texture2D" uid="uid://byfux2ox7dkbl" path="res://Free/Menu/Buttons/Settings.png" id="4_settings"]
+[ext_resource type="Texture2D" uid="uid://dotbyvxti7hp7" path="res://Free/Menu/Buttons/Close.png" id="5_close"]
+[ext_resource type="FontFile" uid="uid://c5r2kjnvtvq1" path="res://Free/VMVTZARCARI-Regular.otf" id="6_font"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font = ExtResource("6_font")
+font_size = 96
+outline_size = 10
+outline_color = Color(0, 0, 0, 0.55)
+
+[sub_resource type="LabelSettings" id="LabelSettings_btn"]
+font = ExtResource("6_font")
+font_size = 44
+outline_size = 6
+outline_color = Color(0, 0, 0, 0.45)
+
+[node name="MainMenu" type="Control" unique_id=27683690]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu_script")
+
+[node name="Background" type="TextureRect" parent="." unique_id=427696948]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+
+[node name="Vignette" type="ColorRect" parent="." unique_id=2133587107]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.18)
+
+[node name="Title" type="Label" parent="." unique_id=1341690156]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -600.0
+offset_top = 80.0
+offset_right = 600.0
+offset_bottom = 220.0
+grow_horizontal = 2
+text = "FROG'S TRIALS"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Center" type="CenterContainer" parent="." unique_id=1018617568]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ButtonsRow" type="HBoxContainer" parent="Center" unique_id=356802816]
+layout_mode = 2
+theme_override_constants/separation = 110
+alignment = 1
+
+[node name="PlayGroup" type="VBoxContainer" parent="Center/ButtonsRow" unique_id=100001]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="PlayButton" type="TextureButton" parent="Center/ButtonsRow/PlayGroup" unique_id=392513589]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("3_play")
+texture_pressed = ExtResource("3_play")
+texture_hover = ExtResource("3_play")
+texture_focused = ExtResource("3_play")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Center/ButtonsRow/PlayGroup" unique_id=1948578202]
+layout_mode = 2
+mouse_filter = 2
+text = "PLAY"
+label_settings = SubResource("LabelSettings_btn")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionsGroup" type="VBoxContainer" parent="Center/ButtonsRow" unique_id=100002]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="OptionsButton" type="TextureButton" parent="Center/ButtonsRow/OptionsGroup" unique_id=774694318]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("4_settings")
+texture_pressed = ExtResource("4_settings")
+texture_hover = ExtResource("4_settings")
+texture_focused = ExtResource("4_settings")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Center/ButtonsRow/OptionsGroup" unique_id=210158310]
+layout_mode = 2
+mouse_filter = 2
+text = "OPTIONS"
+label_settings = SubResource("LabelSettings_btn")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ExitGroup" type="VBoxContainer" parent="Center/ButtonsRow" unique_id=100003]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="ExitButton" type="TextureButton" parent="Center/ButtonsRow/ExitGroup" unique_id=236108718]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("5_close")
+texture_pressed = ExtResource("5_close")
+texture_hover = ExtResource("5_close")
+texture_focused = ExtResource("5_close")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Center/ButtonsRow/ExitGroup" unique_id=1935933528]
+layout_mode = 2
+mouse_filter = 2
+text = "EXIT"
+label_settings = SubResource("LabelSettings_btn")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=220562051]
+
+[node name="FadeRect" type="ColorRect" parent="TransitionLayer" unique_id=1561094386]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 1.0
+offset_right = 3.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
