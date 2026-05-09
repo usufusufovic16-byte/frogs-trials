@@ -47,9 +47,9 @@ jobs:
           mkdir -p ~/.config/godot
           printf '[gd_resource type="EditorSettings" format=3]\n\n[resource]\nexport/android/android_sdk_path = "%s"\nexport/android/debug_keystore = "%s/android-debug.keystore"\nexport/android/debug_keystore_user = "androiddebugkey"\nexport/android/debug_keystore_pass = "android"\nexport/android/java_sdk_path = "%s"\n' \
             "$ANDROID_HOME" "$GITHUB_WORKSPACE" "$JAVA_HOME" \
-            > ~/.config/godot/editor_settings-4.tres
+            > ~/.config/godot/editor_settings-4.6.tres
           echo "=== Editor settings ==="
-          cat ~/.config/godot/editor_settings-4.tres
+          cat ~/.config/godot/editor_settings-4.6.tres
           echo "=== Keystore ==="
           ls -la "$GITHUB_WORKSPACE/android-debug.keystore" && echo "OK" || echo "MISSING"
           echo "=== NDK ==="
