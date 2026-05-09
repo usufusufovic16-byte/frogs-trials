@@ -71,6 +71,9 @@ jobs:
           ls "$ANDROID_HOME/ndk/" || echo "No NDK"
           echo "=== Java ==="
           java -version 2>&1
+          echo "=== Keystore ==="
+          ls -la "$GITHUB_WORKSPACE/android-debug.keystore" || echo "KEYSTORE MISSING"
+          keytool -list -keystore "$GITHUB_WORKSPACE/android-debug.keystore" -storepass android -noprompt 2>&1 || echo "keytool failed"
           mkdir -p "$GITHUB_WORKSPACE/build"
           godot --headless --verbose --path "$GITHUB_WORKSPACE" --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
           echo "=== Build output ==="
