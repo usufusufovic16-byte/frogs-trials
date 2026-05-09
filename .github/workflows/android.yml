@@ -17,13 +17,14 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Install Android SDK components
+      - name: Accept SDK licenses and install components
         run: |
-          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
             "platform-tools" \
             "build-tools;34.0.0" \
             "platforms;android-34" \
-            "ndk;23.2.8568313"
+            "ndk;25.2.9519653"
 
       - name: Download Godot 4.6 headless
         run: |
@@ -42,16 +43,25 @@ jobs:
       - name: Setup Godot editor settings
         run: |
           mkdir -p ~/.config/godot
-          printf '[gd_resource type="EditorSettings" format=3]\n\n[resource]\nexport/android/android_sdk_path = "%s"\nexport/android/debug_keystore = ""\nexport/android/debug_keystore_user = "androiddebugkey"\nexport/android/debug_keystore_pass = "android"\n' "$ANDROID_HOME" > ~/.config/godot/editor_settings-4.tres
+          {
+            echo '[gd_resource type="EditorSettings" format=3]'
+            echo ''
+            echo '[resource]'
+            echo "export/android/android_sdk_path = \"$ANDROID_HOME\""
+            echo "export/android/debug_keystore = \"$GITHUB_WORKSPACE/android-debug.keystore\""
+            echo 'export/android/debug_keystore_user = "androiddebugkey"'
+            echo 'export/android/debug_keystore_pass = "android"'
+          } > ~/.config/godot/editor_settings-4.tres
+          echo "=== Editor settings ==="
           cat ~/.config/godot/editor_settings-4.tres
-
-      - name: Start ADB
-        run: $ANDROID_HOME/platform-tools/adb start-server || true
+          echo "=== SDK NDK ==="
+          ls "$ANDROID_HOME/ndk/" || echo "NDK missing"
+          ls "$ANDROID_HOME/build-tools/" || echo "build-tools missing"
 
       - name: Export APK
         run: |
           mkdir -p build
-          godot --headless --export-debug "Android" build/frogs-trials.apk 2>&1
+          godot --headless --verbose --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
