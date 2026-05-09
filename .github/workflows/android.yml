@@ -55,17 +55,14 @@ jobs:
           echo "=== NDK ==="
           ls "$ANDROID_HOME/ndk/" && echo "OK" || echo "MISSING"
 
-      - name: Start ADB daemon
-        run: |
-          $ANDROID_HOME/platform-tools/adb start-server
-          echo "ADB started"
-
       - name: Import project assets
         run: |
           godot --headless --path "$GITHUB_WORKSPACE" --editor --quit 2>&1 || true
 
       - name: Export Android APK
         run: |
+          $ANDROID_HOME/platform-tools/adb start-server
+          sleep 2
           mkdir -p "$GITHUB_WORKSPACE/build"
           godot --headless --path "$GITHUB_WORKSPACE" --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
           echo "=== Build output ==="
