@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dopvfkda47vx7" path="res://сцены/coin.gd" id="1_ir680"]
 [ext_resource type="Texture2D" uid="uid://bnidtvduttssn" path="res://Free/MonedaD.png" id="1_wu43r"]
+[ext_resource type="AudioStream" path="res://audio/coin.wav" id="2_coin_sfx"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ir680"]
 atlas = ExtResource("1_wu43r")
@@ -49,6 +50,16 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_i5xch"]
 radius = 12.0
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_coin"]
+direction = Vector3(0, -1, 0)
+spread = 180.0
+initial_velocity_min = 40.0
+initial_velocity_max = 80.0
+gravity = Vector3(0, 200, 0)
+scale_min = 2.0
+scale_max = 4.0
+color = Color(1, 0.85, 0.1, 1)
+
 [node name="coin" type="Area2D" unique_id=486242246]
 script = ExtResource("1_ir680")
 
@@ -62,3 +73,15 @@ frame_progress = 0.49999914
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1576053917]
 shape = SubResource("CapsuleShape2D_i5xch")
+
+[node name="SndCoin" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_coin_sfx")
+volume_db = 2.0
+bus = &"SFX"
+
+[node name="Burst" type="GPUParticles2D" parent="."]
+amount = 10
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_coin")

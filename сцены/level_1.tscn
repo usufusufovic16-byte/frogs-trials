@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dgmyuuf6mc1po" path="res://сцены/teleport_portal.tscn" id="8_ldmx7"]
 [ext_resource type="PackedScene" path="res://сцены/pause_menu.tscn" id="9_pause_ui"]
 [ext_resource type="PackedScene" path="res://сцены/mobile_controls.tscn" id="10_mobile"]
+[ext_resource type="AudioStream" path="res://audio/level_music.wav" id="11_music"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hiq0n"]
 texture = ExtResource("1_cyq8d")
@@ -288,5 +289,11 @@ position = Vector2(320, 59)
 [node name="PauseUI" parent="." instance=ExtResource("9_pause_ui")]
 
 [node name="MobileControls" parent="." instance=ExtResource("10_mobile")]
+
+[node name="LevelMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_music")
+volume_db = 0.0
+bus = &"Music"
+autoplay = true
 
 [connection signal="body_entered" from="finish" to="finish" method="_on_body_entered"]

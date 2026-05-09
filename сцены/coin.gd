@@ -1,33 +1,33 @@
 extends Area2D
 
-func _ready():
-	# 1. Запускаем анимацию. 
-	# Убедись, что в AnimatedSprite2D анимация называется "idle" или "default"
-	if $AnimatedSprite2D.sprite_frames.has_animation("idle"):
-		$AnimatedSprite2D.play("idle")
+@onready var anim  : AnimatedSprite2D  = $AnimatedSprite2D
+@onready var sfx   : AudioStreamPlayer = $SndCoin
+@onready var burst : GPUParticles2D    = $Burst
+
+
+func _ready() -> void:
+	if anim.sprite_frames.has_animation("idle"):
+		anim.play("idle")
 	else:
-		$AnimatedSprite2D.play("default")
-	
-	# 2. Соединяем сигнал столкновения
+		anim.play("default")
 	body_entered.connect(_on_body_entered)
 
-func _on_body_entered(body):
-	# Проверяем, что это игрок
+
+func _on_body_entered(body: Node) -> void:
 	if body is CharacterBody2D:
 		collect()
 
-func collect():
-	# 1. Отключаем столкновения сразу (отложенно), чтобы не собрать дважды
+
+func collect() -> void:
 	set_deferred("monitoring", false)
-	
-	# 2. Создаем красивую анимацию сбора через Tween
-	var tween = create_tween()
-	
-	# Параллельно: подлетает вверх и становится прозрачной
-	tween.parallel().tween_property(self, "position:y", position.y - 50, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property(self, "modulate:a", 0.0, 0.3)
-	
-	# 3. После завершения анимации удаляем монетку
-	tween.finished.connect(queue_free)
-	
+	anim.hide()
+
+	sfx.play()
+	burst.emitting = true
+
+	var tw := create_tween()
+	tw.tween_property(self, "scale", Vector2(1.3, 1.3), 0.08).set_trans(Tween.TRANS_BACK)
+	tw.tween_property(self, "scale", Vector2.ZERO,      0.12).set_trans(Tween.TRANS_QUAD)
+	tw.tween_callback(queue_free)
+
 	print("Монетка собрана!")

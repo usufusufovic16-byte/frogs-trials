@@ -1,91 +1,104 @@
 extends CharacterBody2D
 
-const SPEED = 200.0
-const JUMP_VELOCITY = -350.0
+const SPEED         : float = 200.0
+const JUMP_VELOCITY : float = -350.0
+const MAX_JUMPS     : int   = 2
 
-# Переменные для двойного прыжка
-var jump_count = 0
-const MAX_JUMPS = 2
+var jump_count : int   = 0
+var gravity    : float = ProjectSettings.get_setting("physics/2d/default_gravity")
+var _was_on_floor : bool = false
 
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-@onready var sprite = $AnimatedSprite2D
+@onready var sprite     : AnimatedSprite2D  = $AnimatedSprite2D
+@onready var snd_jump   : AudioStreamPlayer = $SndJump
+@onready var snd_land   : AudioStreamPlayer = $SndLand
+@onready var snd_death  : AudioStreamPlayer = $SndDeath
 
-func _physics_process(delta):
-	# 1. Проверяем: касаемся стены И мы не на полу
-	if is_on_wall() and not is_on_floor():
-		
-		# Получаем нормаль стены (куда она "смотрит")
-		# Если стена справа, нормаль.x = -1 (надо прыгать влево)
-		# Если стена слева, нормаль.x = 1 (надо прыгать вправо)
-		var wall_normal = get_wall_normal()
-		
-		# Поворачиваем спрайт к стене:
-		# Если нормаль > 0 (стена слева), flip_h = true (разворот влево)
+
+func _physics_process(delta: float) -> void:
+	var on_floor := is_on_floor()
+
+	# Landing squash
+	if on_floor and not _was_on_floor:
+		snd_land.play()
+		_squash(Vector2(1.2, 0.8))
+
+	_was_on_floor = on_floor
+
+	# Wall jump
+	if is_on_wall() and not on_floor:
+		var wall_normal := get_wall_normal()
 		sprite.flip_h = (wall_normal.x > 0)
-		
-		# 2. Если нажат прыжок
-		if Input.is_action_just_pressed("ui_accept"): # "ui_accept" — это пробел/enter
-			
-			# Даем импульс вверх и в сторону от стены
-			velocity.y = -400 # Сила вверх
-			velocity.x = wall_normal.x * 250 # Отталкивание вбок
-			
-			# Запускаем анимацию прыжка от стены
+		if Input.is_action_just_pressed("ui_accept"):
+			velocity.y = -400.0
+			velocity.x = wall_normal.x * 250.0
 			sprite.play("wall_jump")
-	# 1. Гравитация
-	if not is_on_floor():
+			_do_jump()
+
+	# Gravity
+	if not on_floor:
 		velocity.y += gravity * delta
 	else:
-		# Когда мы на земле, сбрасываем счетчик прыжков
 		jump_count = 0
 
-	# 2. Логика прыжка
+	# Jump
 	if Input.is_action_just_pressed("ui_accept"):
-		if is_on_floor() or jump_count < MAX_JUMPS:
+		if on_floor or jump_count < MAX_JUMPS:
 			velocity.y = JUMP_VELOCITY
 			jump_count += 1
-			
-			# Если это второй прыжок, можно добавить спецэффект
+			_do_jump()
 			if jump_count == 2:
 				play_double_jump_effects()
 
-	# 3. Движение и разворот
-	var direction = Input.get_axis("ui_left", "ui_right")
-	if direction != 0:
+	# Horizontal
+	var direction := Input.get_axis("ui_left", "ui_right")
+	if direction != 0.0:
 		velocity.x = direction * SPEED
-		sprite.flip_h = (direction < 0)
+		sprite.flip_h = (direction < 0.0)
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.x = move_toward(velocity.x, 0.0, SPEED)
 
-	# 4. Обновление анимаций
 	update_animations(direction)
-
 	move_and_slide()
 
-func update_animations(direction):
+
+func _do_jump() -> void:
+	snd_jump.play()
+	Input.vibrate_handheld(40)
+	_stretch(Vector2(0.85, 1.15))
+
+
+func die() -> void:
+	snd_death.play()
+	Input.vibrate_handheld(120)
+
+
+func update_animations(direction: float) -> void:
 	if sprite == null:
 		return
 	if sprite.animation == "wall_jump" and sprite.is_playing():
 		return
-
-	# Дальше твой обычный код анимаций
 	if is_on_floor():
-		if direction == 0:
-			sprite.play("idle")
-		else:
-			sprite.play("run")
+		sprite.play("idle" if direction == 0.0 else "run")
 	else:
-		# Логика для воздуха (двойной прыжок или обычный)
-		if jump_count == 2:
-			if sprite.sprite_frames.has_animation("double_jump"):
-				sprite.play("double_jump")
-			else:
-				sprite.play("jump")
+		if jump_count == 2 and sprite.sprite_frames.has_animation("double_jump"):
+			sprite.play("double_jump")
 		else:
 			sprite.play("jump")
 
-func play_double_jump_effects():
-	# Маленький визуальный трюк: чуть-чуть сжимаем лягушку при втором прыжке
-	var tween = create_tween()
-	tween.tween_property(sprite, "scale", Vector2(1.2, 0.8), 0.05)
-	tween.tween_property(sprite, "scale", Vector2(1.0, 1.0), 0.1)
+
+func play_double_jump_effects() -> void:
+	var tw := create_tween()
+	tw.tween_property(sprite, "scale", Vector2(1.2, 0.8), 0.05)
+	tw.tween_property(sprite, "scale", Vector2(1.0, 1.0), 0.1)
+
+
+func _squash(target: Vector2) -> void:
+	var tw := create_tween()
+	tw.tween_property(sprite, "scale", target,         0.06).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(sprite, "scale", Vector2.ONE,    0.1).set_trans(Tween.TRANS_BACK)
+
+
+func _stretch(target: Vector2) -> void:
+	var tw := create_tween()
+	tw.tween_property(sprite, "scale", target,         0.05).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(sprite, "scale", Vector2.ONE,    0.1).set_trans(Tween.TRANS_BACK)

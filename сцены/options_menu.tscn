@@ -1,0 +1,135 @@
+[gd_scene format=3 uid="uid://coptions00001"]
+
+[ext_resource type="Script" path="res://scripts/options_menu.gd" id="1_opts"]
+[ext_resource type="Texture2D" uid="uid://ctjm0uyn4p7wr" path="res://Free/Background/Green.png" id="2_bg"]
+[ext_resource type="FontFile" uid="uid://c5r2kjnvtvq1" path="res://Free/VMVTZARCARI-Regular.otf" id="3_font"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font = ExtResource("3_font")
+font_size = 72
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_offset = Vector2(3, 3)
+
+[sub_resource type="LabelSettings" id="LabelSettings_row"]
+font = ExtResource("3_font")
+font_size = 36
+font_color = Color(1, 1, 1, 1)
+
+[node name="OptionsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_opts")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+
+[node name="Vignette" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.4)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 28
+
+[node name="Title" type="Label" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 100)
+text = "OPTIONS"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MasterRow" type="HBoxContainer" parent="Center/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="MasterLabel" type="Label" parent="Center/VBox/MasterRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "MASTER"
+label_settings = SubResource("LabelSettings_row")
+vertical_alignment = 1
+
+[node name="MasterSlider" type="HSlider" parent="Center/VBox/MasterRow" unique_name_in_owner=true]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(320, 48)
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="MusicRow" type="HBoxContainer" parent="Center/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="MusicLabel" type="Label" parent="Center/VBox/MusicRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "MUSIC"
+label_settings = SubResource("LabelSettings_row")
+vertical_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="Center/VBox/MusicRow" unique_name_in_owner=true]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(320, 48)
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="SfxRow" type="HBoxContainer" parent="Center/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="SfxLabel" type="Label" parent="Center/VBox/SfxRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "SFX"
+label_settings = SubResource("LabelSettings_row")
+vertical_alignment = 1
+
+[node name="SfxSlider" type="HSlider" parent="Center/VBox/SfxRow" unique_name_in_owner=true]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(320, 48)
+min_value = 0.0
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="Spacer" type="Control" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 20)
+
+[node name="BackButton" type="Button" parent="Center/VBox" unique_name_in_owner=true]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(280, 70)
+text = "BACK"

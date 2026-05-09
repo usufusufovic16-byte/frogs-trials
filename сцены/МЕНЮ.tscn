@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://byfux2ox7dkbl" path="res://Free/Menu/Buttons/Settings.png" id="4_settings"]
 [ext_resource type="Texture2D" uid="uid://dotbyvxti7hp7" path="res://Free/Menu/Buttons/Close.png" id="5_close"]
 [ext_resource type="FontFile" uid="uid://c5r2kjnvtvq1" path="res://Free/VMVTZARCARI-Regular.otf" id="6_font"]
+[ext_resource type="AudioStream" path="res://audio/menu_music.wav" id="7_menu_music"]
+[ext_resource type="AudioStream" path="res://audio/button.wav" id="8_btn_sfx"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_title"]
 font = ExtResource("6_font")
@@ -48,7 +50,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.18)
 
-[node name="Title" type="Label" parent="." unique_id=1341690156]
+[node name="Title" type="Label" parent="." unique_name_in_owner=true unique_id=1341690156]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -147,6 +149,16 @@ text = "EXIT"
 label_settings = SubResource("LabelSettings_btn")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="MenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_menu_music")
+bus = &"Music"
+autoplay = true
+
+[node name="SfxBtn" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_btn_sfx")
+volume_db = 2.0
+bus = &"SFX"
 
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=220562051]
 

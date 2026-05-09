@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://q1eo6s7x3dd5"]
 
 [ext_resource type="Script" uid="uid://bjpjbh3a55bgv" path="res://сцены/player.gd" id="1_135st"]
+[ext_resource type="AudioStream" path="res://audio/jump.wav" id="2_snd_jump"]
+[ext_resource type="AudioStream" path="res://audio/land.wav" id="3_snd_land"]
+[ext_resource type="AudioStream" path="res://audio/death.wav" id="4_snd_death"]
 [ext_resource type="Texture2D" uid="uid://2h20nopuwhe2" path="res://Free/Main Characters/Ninja Frog/Idle (32x32).png" id="1_278kt"]
 [ext_resource type="Texture2D" uid="uid://cdr7jnx1v007q" path="res://Free/Main Characters/Ninja Frog/Jump (32x32).png" id="2_135st"]
 [ext_resource type="Texture2D" uid="uid://bw70l4dyi8qgb" path="res://Free/Main Characters/Ninja Frog/Double Jump (32x32).png" id="2_d25gb"]
@@ -299,3 +302,20 @@ shape = SubResource("CapsuleShape2D_d25gb")
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=601513103]
 z_index = 1
 zoom = Vector2(4, 4)
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+
+[node name="SndJump" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource("2_snd_jump")
+volume_db = 0.0
+bus = &"SFX"
+
+[node name="SndLand" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource("3_snd_land")
+volume_db = -3.0
+bus = &"SFX"
+
+[node name="SndDeath" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource("4_snd_death")
+volume_db = 0.0
+bus = &"SFX"
