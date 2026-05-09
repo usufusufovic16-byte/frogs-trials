@@ -27,76 +27,15 @@ jobs:
             "platforms;android-35" \
             "ndk;25.2.9519653"
 
-      - name: Install Xvfb
-        run: sudo apt-get install -y xvfb
-
-      - name: Download Godot 4.6
-        run: |
-          wget -q "https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_linux.x86_64.zip" -O godot.zip
-          unzip -q godot.zip
-          chmod +x Godot_v4.6-stable_linux.x86_64
-          sudo mv Godot_v4.6-stable_linux.x86_64 /usr/local/bin/godot
-
-      - name: Download export templates
-        run: |
-          mkdir -p ~/.local/share/godot/export_templates/4.6.stable
-          wget -q "https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_export_templates.tpz" -O templates.tpz
-          unzip -q templates.tpz -d /tmp/tpz
-          mv /tmp/tpz/templates/* ~/.local/share/godot/export_templates/4.6.stable/
-
-      - name: Start Xvfb and ADB
-        run: |
-          Xvfb :99 -screen 0 1024x768x24 &
-          sleep 2
-          $ANDROID_HOME/platform-tools/adb start-server
-
-      - name: Initialize editor (let Godot register all settings)
-        run: |
-          mkdir -p ~/.config/godot
-          printf '[gd_resource type="EditorSettings" format=3]\n\n[resource]\n' \
-            > ~/.config/godot/editor_settings-4.6.tres
-          DISPLAY=:99 timeout 60 godot --headless --path "$GITHUB_WORKSPACE" --editor --quit 2>&1 || true
-
-      - name: Patch Android settings into editor config
-        run: |
-          python3 << 'PYEOF'
-          import re, os
-
-          path = os.path.expanduser("~/.config/godot/editor_settings-4.6.tres")
-          sdk   = os.environ["ANDROID_HOME"]
-          ws    = os.environ["GITHUB_WORKSPACE"]
-          java  = os.environ["JAVA_HOME"]
-
-          with open(path) as f:
-              content = f.read()
-
-          def patch(text, key, val):
-              pattern = re.compile(rf'^{re.escape(key)} = .*$', re.MULTILINE)
-              replacement = f'{key} = "{val}"'
-              if pattern.search(text):
-                  return pattern.sub(replacement, text)
-              return text.rstrip() + f'\n{replacement}\n'
-
-          content = patch(content, "export/android/android_sdk_path",  sdk)
-          content = patch(content, "export/android/debug_keystore",     f"{ws}/android-debug.keystore")
-          content = patch(content, "export/android/debug_keystore_user","androiddebugkey")
-          content = patch(content, "export/android/debug_keystore_pass","android")
-          content = patch(content, "export/android/java_sdk_path",      java)
-
-          with open(path, "w") as f:
-              f.write(content)
-
-          print("=== Patched settings ===")
-          print(content)
-          PYEOF
-
       - name: Export Android APK
-        run: |
-          $ANDROID_HOME/platform-tools/adb start-server
-          sleep 1
-          mkdir -p "$GITHUB_WORKSPACE/build"
-          DISPLAY=:99 timeout 300 godot --verbose --path "$GITHUB_WORKSPACE" --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
-          ls -la "$GITHUB_WORKSPACE/build/"
+        uses: dulvui/godot-android-export@v3
+        with:
+          working-directory: .
+          godot-version: 4.6.0
+          keystore-path: android-debug.keystore
+          keystore-password: android
+          keystore-key-alias: androiddebugkey
+          keystore-key-password: android
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
