@@ -43,46 +43,41 @@ jobs:
           WS: ${{ github.workspace }}
         run: |
           mkdir -p ~/.config/godot
-
-          # EditorSettings: SDK, NDK, Java paths
-          cat > ~/.config/godot/editor_settings-4.6.tres << EOF
-[gd_resource type="EditorSettings" format=3]
-
-[resource]
-export/android/android_sdk_path = "$ANDROID_HOME"
-export/android/android_ndk_path = "$ANDROID_HOME/ndk/25.2.9519653"
-export/android/java_sdk_path = "$JAVA_HOME"
-export/android/debug_keystore = "$WS/android-debug.keystore"
-export/android/debug_keystore_user = "androiddebugkey"
-export/android/debug_keystore_pass = "android"
-EOF
-
-          # Also patch export_presets.cfg with keystore path directly in preset
-          python3 << 'PYEOF'
-import re, os
-ws = os.environ["WS"]
-path = f"{ws}/export_presets.cfg"
-
-with open(path) as f:
-    content = f.read()
-
-def patch(text, key, val):
-    pattern = re.compile(rf'^({re.escape(key)})=.*$', re.MULTILINE)
-    replacement = rf'\1="{val}"'
-    if pattern.search(text):
-        return pattern.sub(replacement, text)
-    return text
-
-content = patch(content, 'keystore/debug', f"{ws}/android-debug.keystore")
-content = patch(content, 'keystore/debug_user', 'androiddebugkey')
-content = patch(content, 'keystore/debug_password', 'android')
-
-with open(path, "w") as f:
-    f.write(content)
-
-print("=== export_presets.cfg after patching ===")
-print(content)
-PYEOF
+          python3 -c "
+          import os, re
+          ws = os.environ['WS']
+          ah = os.environ['ANDROID_HOME']
+          jh = os.environ['JAVA_HOME']
+          lines = [
+            '[gd_resource type=\"EditorSettings\" format=3]',
+            '',
+            '[resource]',
+            'export/android/android_sdk_path = \"' + ah + '\"',
+            'export/android/android_ndk_path = \"' + ah + '/ndk/25.2.9519653\"',
+            'export/android/java_sdk_path = \"' + jh + '\"',
+            'export/android/debug_keystore = \"' + ws + '/android-debug.keystore\"',
+            'export/android/debug_keystore_user = \"androiddebugkey\"',
+            'export/android/debug_keystore_pass = \"android\"',
+          ]
+          s = '\n'.join(lines) + '\n'
+          p = os.path.expanduser('~/.config/godot/editor_settings-4.6.tres')
+          open(p, 'w').write(s)
+          print('EditorSettings written:')
+          print(s)
+          ep = ws + '/export_presets.cfg'
+          c = open(ep).read()
+          def patch(t, k, v):
+            import re
+            pat = re.compile(r'^(' + re.escape(k) + r')=.*$', re.MULTILINE)
+            rep = r'\1=\"' + v + '\"'
+            return pat.sub(rep, t) if pat.search(t) else t
+          c = patch(c, 'keystore/debug', ws + '/android-debug.keystore')
+          c = patch(c, 'keystore/debug_user', 'androiddebugkey')
+          c = patch(c, 'keystore/debug_password', 'android')
+          open(ep, 'w').write(c)
+          print('export_presets.cfg patched:')
+          print(c)
+          "
 
       - name: Start ADB
         run: $ANDROID_HOME/platform-tools/adb start-server
