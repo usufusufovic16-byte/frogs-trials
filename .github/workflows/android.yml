@@ -45,8 +45,8 @@ jobs:
       - name: Configure editor settings
         run: |
           mkdir -p ~/.config/godot
-          printf '[gd_resource type="EditorSettings" format=3]\n\n[resource]\nexport/android/android_sdk_path = "%s"\nexport/android/debug_keystore = "%s/android-debug.keystore"\nexport/android/debug_keystore_user = "androiddebugkey"\nexport/android/debug_keystore_pass = "android"\n' \
-            "$ANDROID_HOME" "$GITHUB_WORKSPACE" \
+          printf '[gd_resource type="EditorSettings" format=3]\n\n[resource]\nexport/android/android_sdk_path = "%s"\nexport/android/debug_keystore = "%s/android-debug.keystore"\nexport/android/debug_keystore_user = "androiddebugkey"\nexport/android/debug_keystore_pass = "android"\nexport/android/java_sdk_path = "%s"\n' \
+            "$ANDROID_HOME" "$GITHUB_WORKSPACE" "$JAVA_HOME" \
             > ~/.config/godot/editor_settings-4.tres
           echo "=== Editor settings ==="
           cat ~/.config/godot/editor_settings-4.tres
@@ -63,10 +63,18 @@ jobs:
         run: |
           $ANDROID_HOME/platform-tools/adb start-server
           sleep 2
+          echo "=== Android templates check ==="
+          ls ~/.local/share/godot/export_templates/ || echo "No export_templates dir"
+          ls ~/.local/share/godot/export_templates/4.6.stable/ | grep -i android || echo "NO ANDROID TEMPLATES"
+          echo "=== SDK check ==="
+          ls "$ANDROID_HOME/build-tools/" || echo "No build-tools"
+          ls "$ANDROID_HOME/ndk/" || echo "No NDK"
+          echo "=== Java ==="
+          java -version 2>&1
           mkdir -p "$GITHUB_WORKSPACE/build"
-          godot --headless --path "$GITHUB_WORKSPACE" --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
+          godot --headless --verbose --path "$GITHUB_WORKSPACE" --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
           echo "=== Build output ==="
-          ls -la "$GITHUB_WORKSPACE/build/"
+          ls -la "$GITHUB_WORKSPACE/build/" || echo "Build dir empty"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
