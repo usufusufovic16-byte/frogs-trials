@@ -44,23 +44,51 @@ jobs:
           unzip -q templates.tpz -d /tmp/tpz
           mv /tmp/tpz/templates/* ~/.local/share/godot/export_templates/4.6.stable/
 
-      - name: Configure editor settings
-        run: |
-          mkdir -p ~/.config/godot
-          printf '[gd_resource type="EditorSettings" format=3]\n\n[resource]\nexport/android/android_sdk_path = "%s"\nexport/android/debug_keystore = "%s/android-debug.keystore"\nexport/android/debug_keystore_user = "androiddebugkey"\nexport/android/debug_keystore_pass = "android"\nexport/android/java_sdk_path = "%s"\n' \
-            "$ANDROID_HOME" "$GITHUB_WORKSPACE" "$JAVA_HOME" \
-            > ~/.config/godot/editor_settings-4.6.tres
-
       - name: Start Xvfb and ADB
         run: |
           Xvfb :99 -screen 0 1024x768x24 &
           sleep 2
           $ANDROID_HOME/platform-tools/adb start-server
-          echo "Xvfb and ADB started"
 
-      - name: Import project assets
+      - name: Initialize editor (let Godot register all settings)
         run: |
-          godot --headless --path "$GITHUB_WORKSPACE" --editor --quit 2>&1 || true
+          mkdir -p ~/.config/godot
+          printf '[gd_resource type="EditorSettings" format=3]\n\n[resource]\n' \
+            > ~/.config/godot/editor_settings-4.6.tres
+          DISPLAY=:99 timeout 60 godot --headless --path "$GITHUB_WORKSPACE" --editor --quit 2>&1 || true
+
+      - name: Patch Android settings into editor config
+        run: |
+          python3 << 'PYEOF'
+          import re, os
+
+          path = os.path.expanduser("~/.config/godot/editor_settings-4.6.tres")
+          sdk   = os.environ["ANDROID_HOME"]
+          ws    = os.environ["GITHUB_WORKSPACE"]
+          java  = os.environ["JAVA_HOME"]
+
+          with open(path) as f:
+              content = f.read()
+
+          def patch(text, key, val):
+              pattern = re.compile(rf'^{re.escape(key)} = .*$', re.MULTILINE)
+              replacement = f'{key} = "{val}"'
+              if pattern.search(text):
+                  return pattern.sub(replacement, text)
+              return text.rstrip() + f'\n{replacement}\n'
+
+          content = patch(content, "export/android/android_sdk_path",  sdk)
+          content = patch(content, "export/android/debug_keystore",     f"{ws}/android-debug.keystore")
+          content = patch(content, "export/android/debug_keystore_user","androiddebugkey")
+          content = patch(content, "export/android/debug_keystore_pass","android")
+          content = patch(content, "export/android/java_sdk_path",      java)
+
+          with open(path, "w") as f:
+              f.write(content)
+
+          print("=== Patched settings ===")
+          print(content)
+          PYEOF
 
       - name: Export Android APK
         run: |
