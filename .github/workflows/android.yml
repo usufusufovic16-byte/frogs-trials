@@ -44,7 +44,7 @@ jobs:
         run: |
           mkdir -p ~/.config/godot
           python3 -c "
-          import os, re
+          import os
           ws = os.environ['WS']
           ah = os.environ['ANDROID_HOME']
           jh = os.environ['JAVA_HOME']
@@ -62,22 +62,26 @@ jobs:
           s = '\n'.join(lines) + '\n'
           p = os.path.expanduser('~/.config/godot/editor_settings-4.6.tres')
           open(p, 'w').write(s)
-          print('EditorSettings written:')
+          print('EditorSettings:')
           print(s)
-          ep = ws + '/export_presets.cfg'
-          c = open(ep).read()
-          def patch(t, k, v):
-            import re
-            pat = re.compile(r'^(' + re.escape(k) + r')=.*$', re.MULTILINE)
-            rep = r'\1=\"' + v + '\"'
-            return pat.sub(rep, t) if pat.search(t) else t
-          c = patch(c, 'keystore/debug', ws + '/android-debug.keystore')
-          c = patch(c, 'keystore/debug_user', 'androiddebugkey')
-          c = patch(c, 'keystore/debug_password', 'android')
-          open(ep, 'w').write(c)
-          print('export_presets.cfg patched:')
-          print(c)
           "
+
+      - name: Diagnose paths
+        env:
+          WS: ${{ github.workspace }}
+        run: |
+          echo "=== jarsigner ==="
+          ls -la $JAVA_HOME/bin/jarsigner || echo "MISSING"
+          echo "=== adb ==="
+          ls -la $ANDROID_HOME/platform-tools/adb || echo "MISSING"
+          echo "=== build-tools ==="
+          ls $ANDROID_HOME/build-tools/ || echo "MISSING"
+          echo "=== platforms ==="
+          ls $ANDROID_HOME/platforms/ || echo "MISSING"
+          echo "=== keystore ==="
+          ls -la $WS/android-debug.keystore || echo "MISSING"
+          echo "=== templates ==="
+          ls ~/.local/share/godot/export_templates/4.6.stable/ | grep android || echo "MISSING"
 
       - name: Start ADB
         run: $ANDROID_HOME/platform-tools/adb start-server
@@ -85,6 +89,9 @@ jobs:
       - name: Export Android APK
         env:
           WS: ${{ github.workspace }}
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ github.workspace }}/android-debug.keystore
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: androiddebugkey
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
         run: |
           sudo apt-get install -y xvfb
           Xvfb :99 -screen 0 1024x768x24 &
