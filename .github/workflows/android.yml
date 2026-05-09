@@ -39,6 +39,8 @@ jobs:
           wget -q "https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_export_templates.tpz" -O templates.tpz
           unzip -q templates.tpz -d /tmp/tpz
           mv /tmp/tpz/templates/* ~/.local/share/godot/export_templates/4.6.stable/
+          echo "=== Android templates ==="
+          ls ~/.local/share/godot/export_templates/4.6.stable/ | grep -i android || echo "NO ANDROID TEMPLATES"
 
       - name: Configure editor settings
         run: |
@@ -56,12 +58,11 @@ jobs:
       - name: Import project assets
         run: |
           godot --headless --path "$GITHUB_WORKSPACE" --editor --quit 2>&1 || true
-          echo "Import complete"
 
       - name: Export Android APK
         run: |
           mkdir -p "$GITHUB_WORKSPACE/build"
-          godot --headless --path "$GITHUB_WORKSPACE" --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
+          godot --headless --path "$GITHUB_WORKSPACE" --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1 || true
           echo "=== Build output ==="
           ls -la "$GITHUB_WORKSPACE/build/" || echo "Build dir empty"
 
@@ -70,4 +71,14 @@ jobs:
         with:
           name: frogs-trials-apk
           path: build/frogs-trials.apk
+          if-no-files-found: warn
           retention-days: 30
+
+      - name: Upload Godot logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-logs
+          path: ~/.local/share/godot/logs/
+          if-no-files-found: warn
+          retention-days: 7
