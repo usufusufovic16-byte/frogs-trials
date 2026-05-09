@@ -2,33 +2,34 @@
 
 [ext_resource type="Script" uid="uid://ytijxxphs00k" path="res://scripts/pause_menu.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://jqklrte6uklk" path="res://pause-no-bg-preview (carve.photos).png" id="2_pause"]
-[ext_resource type="Texture2D" uid="uid://b0bwjmrtvsl1" path="res://Gemini_Generated_Image_3a69x43a69x43a69-edited-free (carve.photos).png" id="3_panel"]
-[ext_resource type="Texture2D" uid="uid://dotbyvxti7hp7" path="res://Free/Menu/Buttons/Close.png" id="4_close"]
+[ext_resource type="FontFile" uid="uid://c5r2kjnvtvq1" path="res://Free/VMVTZARCARI-Regular.otf" id="3_font"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_ffcfm"]
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font = ExtResource("3_font")
+font_size = 72
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_offset = Vector2(3, 3)
 
-[node name="PauseUI" type="CanvasLayer" unique_id=725600357]
+[node name="PauseUI" type="CanvasLayer"]
 layer = 100
 script = ExtResource("1_script")
 
-[node name="PauseButton" type="TextureButton" parent="." unique_id=2016311105]
+[node name="PauseButton" type="Button" parent="." unique_name_in_owner=true]
 unique_name_in_owner = true
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -218.0
-offset_top = -5.0
-offset_right = -4.0
-offset_bottom = 222.0
+offset_left = -130.0
+offset_top = 30.0
+offset_right = -30.0
+offset_bottom = 130.0
 grow_horizontal = 0
-texture_normal = ExtResource("2_pause")
-texture_pressed = ExtResource("2_pause")
-texture_hover = ExtResource("2_pause")
-texture_focused = ExtResource("2_pause")
-ignore_texture_size = true
-stretch_mode = 5
+icon = ExtResource("2_pause")
+flat = true
+icon_alignment = 1
+expand_icon = true
 
-[node name="Overlay" type="Control" parent="." unique_id=809272919]
+[node name="Overlay" type="Control" parent="." unique_name_in_owner=true]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -36,64 +37,57 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+visible = false
 
-[node name="Dim" type="ColorRect" parent="Overlay" unique_id=266301835]
-layout_mode = 0
+[node name="Dim" type="ColorRect" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.55)
+color = Color(0, 0, 0, 0.65)
 
-[node name="PanelCenter" type="CenterContainer" parent="Overlay" unique_id=823217515]
+[node name="Center" type="CenterContainer" parent="Overlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1.0
-offset_top = 10.0
-offset_right = -1.0
-offset_bottom = 10.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="TextureRect" parent="Overlay/PanelCenter" unique_id=878734278]
-custom_minimum_size = Vector2(780, 520)
+[node name="VBox" type="VBoxContainer" parent="Overlay/Center"]
 layout_mode = 2
-texture = ExtResource("3_panel")
-expand_mode = 1
-stretch_mode = 5
+theme_override_constants/separation = 20
+alignment = 1
 
-[node name="BackToMenuButton" type="TextureButton" parent="Overlay/PanelCenter/Panel" unique_id=1978057594]
+[node name="Title" type="Label" parent="Overlay/Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 90)
+text = "PAUSED"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Spacer" type="Control" parent="Overlay/Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 16)
+
+[node name="ResumeButton" type="Button" parent="Overlay/Center/VBox" unique_name_in_owner=true]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -444.0
-offset_top = 244.0
-offset_right = -330.0
-offset_bottom = 330.0
-grow_horizontal = 0
-texture_normal = ExtResource("4_close")
-texture_pressed = ExtResource("4_close")
-texture_hover = ExtResource("4_close")
-texture_focused = ExtResource("4_close")
-ignore_texture_size = true
-stretch_mode = 5
+layout_mode = 2
+custom_minimum_size = Vector2(280, 70)
+text = "RESUME"
 
-[node name="Label" type="Label" parent="Overlay/PanelCenter/Panel/BackToMenuButton" unique_id=849870126]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 87.0
-offset_right = 84.0
-offset_bottom = 112.0
-text = "MENU"
-label_settings = SubResource("LabelSettings_ffcfm")
-max_lines_visible = 9
-visible_characters = 11
-visible_characters_behavior = 3
-visible_ratio = 2.75
-structured_text_bidi_override = 6
-structured_text_bidi_override_options = [null, null, null, null, null, null, null, null, null, null]
+[node name="RestartButton" type="Button" parent="Overlay/Center/VBox" unique_name_in_owner=true]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(280, 70)
+text = "RESTART"
+
+[node name="BackToMenuButton" type="Button" parent="Overlay/Center/VBox" unique_name_in_owner=true]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(280, 70)
+text = "MAIN MENU"
