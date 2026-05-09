@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Java
+        id: setup-java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -39,6 +40,8 @@ jobs:
           wget -q https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_export_templates.tpz
           unzip -q Godot_v4.6-stable_export_templates.tpz -d /tmp/templates
           mv /tmp/templates/templates/* ~/.local/share/godot/export_templates/4.6.stable/
+          echo "=== Android templates ==="
+          ls ~/.local/share/godot/export_templates/4.6.stable/ | grep -i android || echo "No android templates found!"
 
       - name: Setup Godot editor settings
         run: |
@@ -47,6 +50,7 @@ jobs:
             echo '[gd_resource type="EditorSettings" format=3]'
             echo ''
             echo '[resource]'
+            echo "export/android/java_sdk_path = \"$JAVA_HOME\""
             echo "export/android/android_sdk_path = \"$ANDROID_HOME\""
             echo "export/android/debug_keystore = \"$GITHUB_WORKSPACE/android-debug.keystore\""
             echo 'export/android/debug_keystore_user = "androiddebugkey"'
@@ -54,14 +58,15 @@ jobs:
           } > ~/.config/godot/editor_settings-4.tres
           echo "=== Editor settings ==="
           cat ~/.config/godot/editor_settings-4.tres
-          echo "=== SDK NDK ==="
-          ls "$ANDROID_HOME/ndk/" || echo "NDK missing"
-          ls "$ANDROID_HOME/build-tools/" || echo "build-tools missing"
+          echo "=== NDK ==="
+          ls "$ANDROID_HOME/ndk/" || echo "NDK not found"
+          echo "=== Java ==="
+          java -version
 
       - name: Export APK
         run: |
           mkdir -p build
-          godot --headless --verbose --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
+          godot --headless --export-debug "Android" "$GITHUB_WORKSPACE/build/frogs-trials.apk" 2>&1
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
