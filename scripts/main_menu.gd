@@ -36,12 +36,12 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_title_time += delta
-	if title_label:
-		title_label.position.y = title_label.position.y
-		var base_y : float = title_label.get_meta("base_y", title_label.position.y)
-		if not title_label.has_meta("base_y"):
-			title_label.set_meta("base_y", title_label.position.y)
-		title_label.position.y = base_y + sin(_title_time * PI) * 4.0
+	if not title_label:
+		return
+	if not title_label.has_meta("base_y"):
+		title_label.set_meta("base_y", title_label.position.y)
+	var base_y : float = title_label.get_meta("base_y")
+	title_label.position.y = base_y + sin(_title_time * PI) * 4.0
 
 
 func _wire_button(btn: TextureButton) -> void:

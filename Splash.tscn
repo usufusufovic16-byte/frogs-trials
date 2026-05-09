@@ -1,21 +1,26 @@
 [gd_scene format=3 uid="uid://cxsplash00001"]
 
 [ext_resource type="Script" path="res://Splash.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://Gemini_Generated_Image_ifxq59ifxq59ifxq.png" id="2_img"]
-[ext_resource type="AudioStream" path="res://neon-lamp-switching-on_mjoagseu.mp3" id="3_audio"]
-[ext_resource type="FontFile" uid="uid://c5r2kjnvtvq1" path="res://Free/VMVTZARCARI-Regular.otf" id="4_font"]
+[ext_resource type="FontFile" uid="uid://c5r2kjnvtvq1" path="res://Free/VMVTZARCARI-Regular.otf" id="2_font"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_yusuf"]
-font = ExtResource("4_font")
+font = ExtResource("2_font")
 font_size = 52
 font_color = Color(1, 1, 1, 1)
 shadow_color = Color(0, 0.6, 1, 0.5)
 shadow_offset = Vector2(0, 3)
 
-[node name="Splash" type="Node2D"]
+[node name="Splash" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_script")
 
 [node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -24,25 +29,22 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = -60.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_img")
 expand_mode = 3
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="."]
-anchors_preset = 7
-anchor_left = 0.0
+layout_mode = 1
 anchor_top = 1.0
-anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = -100.0
 offset_bottom = -30.0
-grow_horizontal = 2
 grow_vertical = 0
 text = "YUSUF GAMES"
 label_settings = SubResource("LabelSettings_yusuf")
@@ -50,5 +52,4 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_audio")
 volume_db = 0.0

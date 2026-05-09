@@ -97,6 +97,8 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 &
           sleep 2
           mkdir -p "$WS/build"
+          # Import all resources first (creates .godot/imported/ files)
+          DISPLAY=:99 timeout 120 godot --headless --path "$WS" --import 2>&1 || true
           DISPLAY=:99 timeout 300 godot --headless --path "$WS" --export-debug "Android" "$WS/build/frogs-trials.apk" 2>&1
           ls -la "$WS/build/"
 
