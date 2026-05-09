@@ -33,10 +33,10 @@ jobs:
           unzip -q godot.zip
           chmod +x Godot_v4.6-stable_linux.x86_64
           sudo mv Godot_v4.6-stable_linux.x86_64 /usr/local/bin/godot
-          mkdir -p ~/.local/share/godot/export_templates/4.6.stable
+          mkdir -p ~/.local/share/godot/export_templates/4.6.0.stable
           wget -q "https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_export_templates.tpz" -O templates.tpz
           unzip -q templates.tpz -d /tmp/tpz
-          mv /tmp/tpz/templates/* ~/.local/share/godot/export_templates/4.6.stable/
+          mv /tmp/tpz/templates/* ~/.local/share/godot/export_templates/4.6.0.stable/
 
       - name: Configure Android settings
         env:
@@ -81,7 +81,7 @@ jobs:
           echo "=== keystore ==="
           ls -la $WS/android-debug.keystore || echo "MISSING"
           echo "=== templates ==="
-          ls ~/.local/share/godot/export_templates/4.6.stable/ | grep android || echo "MISSING"
+          ls ~/.local/share/godot/export_templates/4.6.0.stable/ | grep android || echo "MISSING"
 
       - name: Start ADB
         run: $ANDROID_HOME/platform-tools/adb start-server
