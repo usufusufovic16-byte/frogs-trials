@@ -16,11 +16,17 @@ var _jump_pressed : bool = false
 var _jump_center  : Vector2
 
 var _canvas: Control
+var _was_paused := false
 
 
 func _ready() -> void:
 	layer = 10
 	process_mode = Node.PROCESS_MODE_ALWAYS
+
+	# Сброс залипших нажатий от предыдущей сцены
+	Input.action_release("ui_left")
+	Input.action_release("ui_right")
+	Input.action_release("ui_accept")
 
 	var vs := get_viewport().get_visible_rect().size
 	_jump_center = Vector2(vs.x - 130.0, vs.y - 130.0)
@@ -32,6 +38,20 @@ func _ready() -> void:
 	_canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_canvas)
 	_canvas.draw.connect(_draw_hud)
+
+
+func _process(_delta: float) -> void:
+	var is_paused := get_tree().paused
+	if _was_paused and not is_paused:
+		_release_joystick()
+		_release_jump()
+	_was_paused = is_paused
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		_release_joystick()
+		_release_jump()
 
 
 func _input(event: InputEvent) -> void:
@@ -58,10 +78,6 @@ func _on_touch(ev: InputEventScreenTouch) -> void:
 		if ev.index == _joy_idx:
 			_release_joystick()
 		elif ev.index == _jump_idx:
-			_release_jump()
-		else:
-			# Safety: если индекс потерян — сбросить всё
-			_release_joystick()
 			_release_jump()
 
 	_canvas.queue_redraw()
