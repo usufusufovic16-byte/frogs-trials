@@ -9,6 +9,13 @@
 [ext_resource type="AudioStream" path="res://audio/menu_music.wav" id="7_menu_music"]
 [ext_resource type="AudioStream" path="res://audio/button.wav" id="8_btn_sfx"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_splash"]
+font = ExtResource("6_font")
+font_size = 64
+font_color = Color(1, 1, 1, 1)
+shadow_color = Color(0, 0.6, 1, 0.6)
+shadow_offset = Vector2(0, 4)
+
 [sub_resource type="LabelSettings" id="LabelSettings_title"]
 font = ExtResource("6_font")
 font_size = 96
@@ -159,6 +166,40 @@ autoplay = true
 stream = ExtResource("8_btn_sfx")
 volume_db = 2.0
 bus = &"SFX"
+
+[node name="SplashLayer" type="CanvasLayer" parent="."]
+layer = 200
+
+[node name="SplashBox" type="Control" parent="SplashLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BG" type="ColorRect" parent="SplashLayer/SplashBox"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="YusufLabel" type="Label" parent="SplashLayer/SplashBox"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+modulate = Color(1, 1, 1, 0)
+text = "YUSUF GAMES"
+label_settings = SubResource("LabelSettings_splash")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TransitionLayer" type="CanvasLayer" parent="." unique_id=220562051]
 
