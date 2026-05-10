@@ -8,6 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://c7uqa6jqin80v" path="res://Free/Background/Brown.png" id="6_m2yiw"]
 [ext_resource type="PackedScene" uid="uid://blchkpx56720m" path="res://сцены/pause_menu.tscn" id="7_pause_ui"]
 [ext_resource type="PackedScene" path="res://сцены/mobile_controls.tscn" id="8_mobile"]
+[ext_resource type="Script" uid="uid://q5eya7etyew" path="res://сцены/finish.gd" id="9_finish"]
+[ext_resource type="PackedScene" uid="uid://dgmyuuf6mc1po" path="res://сцены/teleport_portal.tscn" id="10_portal"]
+[ext_resource type="AudioStream" path="res://audio/level_music.wav" id="11_music"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_js2i2"]
 texture = ExtResource("1_jlm3u")
@@ -219,6 +222,9 @@ texture = ExtResource("1_jlm3u")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_js2i2")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l2"]
+size = Vector2(32, 80)
+
 [node name="level_2" type="Node2D" unique_id=167141031]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1786742608]
@@ -303,6 +309,25 @@ texture = ExtResource("6_m2yiw")
 region_enabled = true
 region_rect = Rect2(0, 0, 4000, 1000)
 
+[node name="finish" type="Area2D" parent="."]
+position = Vector2(720, 14)
+script = ExtResource("9_finish")
+next_level_path = "res://сцены/level_3.tscn"
+level_number = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="finish"]
+shape = SubResource("RectangleShape2D_l2")
+
+[node name="TeleportPortal" parent="." instance=ExtResource("10_portal")]
+position = Vector2(720, 2)
+
 [node name="PauseUI" parent="." unique_id=968345124 instance=ExtResource("7_pause_ui")]
 
 [node name="MobileControls" parent="." instance=ExtResource("8_mobile")]
+
+[node name="LevelMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_music")
+bus = &"Music"
+autoplay = true
+
+[connection signal="body_entered" from="finish" to="finish" method="_on_body_entered"]

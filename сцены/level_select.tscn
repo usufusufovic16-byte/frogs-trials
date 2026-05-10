@@ -1,0 +1,100 @@
+[gd_scene format=4 uid="uid://lvlsel0000001"]
+
+[ext_resource type="Script" path="res://scripts/level_select.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://c7uqa6jqin80v" path="res://Free/Background/Brown.png" id="2_bg"]
+[ext_resource type="FontFile" uid="uid://c5r2kjnvtvq1" path="res://Free/VMVTZARCARI-Regular.otf" id="3_font"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font = ExtResource("3_font")
+font_size = 72
+font_color = Color(1, 1, 1, 1)
+outline_size = 8
+outline_color = Color(0, 0, 0, 0.6)
+
+[node name="LevelSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+
+[node name="Vignette" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.3)
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -500.0
+offset_top = 40.0
+offset_right = 500.0
+offset_bottom = 140.0
+grow_horizontal = 2
+text = "SELECT LEVEL"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_top = 60.0
+offset_bottom = -80.0
+
+[node name="LevelGrid" type="GridContainer" parent="Center"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 5
+
+[node name="BackButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = -70.0
+offset_right = 120.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "BACK"
+
+[node name="FadeRect" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

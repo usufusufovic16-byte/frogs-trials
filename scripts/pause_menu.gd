@@ -101,7 +101,7 @@ func _on_resume() -> void:
 
 func _on_restart() -> void:
 	_set_paused(false)
-	get_tree().change_scene_to_file(level_scene)
+	get_tree().reload_current_scene()
 
 
 func _go_to_menu() -> void:

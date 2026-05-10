@@ -109,7 +109,7 @@ func _on_play_pressed() -> void:
 	_play_sfx()
 	_set_buttons_enabled(false)
 	await _fade_to_black(0.22)
-	get_tree().change_scene_to_file(level_1_scene)
+	get_tree().change_scene_to_file("res://сцены/level_select.tscn")
 
 
 func _on_options_pressed() -> void:

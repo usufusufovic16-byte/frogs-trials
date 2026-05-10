@@ -1,0 +1,125 @@
+[gd_scene format=4 uid="uid://clvl7tscn0001"]
+
+[ext_resource type="Texture2D" uid="uid://dsu4x3a6eyxsi" path="res://Free/Terrain/Terrain (16x16).png" id="1_terrain"]
+[ext_resource type="PackedScene" uid="uid://dmjjbc7ujefk4" path="res://сцены/coin.tscn" id="2_coin"]
+[ext_resource type="PackedScene" uid="uid://bsbfldh5oq2w8" path="res://сцены/spikes 2d.tscn" id="3_spikes"]
+[ext_resource type="PackedScene" uid="uid://6yj3hhu21x4h" path="res://сцены/saw.tscn" id="4_saw"]
+[ext_resource type="PackedScene" uid="uid://q1eo6s7x3dd5" path="res://сцены/лягушка.tscn" id="5_frog"]
+[ext_resource type="Texture2D" uid="uid://c7uqa6jqin80v" path="res://Free/Background/Brown.png" id="6_bg"]
+[ext_resource type="PackedScene" path="res://сцены/pause_menu.tscn" id="7_pause"]
+[ext_resource type="PackedScene" path="res://сцены/mobile_controls.tscn" id="8_mobile"]
+[ext_resource type="Script" uid="uid://q5eya7etyew" path="res://сцены/finish.gd" id="9_finish"]
+[ext_resource type="PackedScene" uid="uid://dgmyuuf6mc1po" path="res://сцены/teleport_portal.tscn" id="10_portal"]
+[ext_resource type="AudioStream" path="res://audio/level_music.wav" id="11_music"]
+[ext_resource type="Script" path="res://scripts/level_7.gd" id="12_script"]
+[ext_resource type="PackedScene" uid="uid://mvplat00001aa" path="res://сцены/moving_platform.tscn" id="13_mvplat"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1"]
+texture = ExtResource("1_terrain")
+7:0/0 = 0
+7:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+
+[sub_resource type="TileSet" id="TileSet_1"]
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_1")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_finish"]
+size = Vector2(32, 80)
+
+[node name="level_7" type="Node2D"]
+script = ExtResource("12_script")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+position = Vector2(-2, 1)
+tile_set = SubResource("TileSet_1")
+
+[node name="лягушка" parent="." instance=ExtResource("5_frog")]
+position = Vector2(45, 557)
+
+[node name="MovingPlatform" parent="." instance=ExtResource("13_mvplat")]
+position = Vector2(142, 553)
+distance = 50.0
+
+[node name="MovingPlatform2" parent="." instance=ExtResource("13_mvplat")]
+position = Vector2(334, 553)
+distance = 50.0
+
+[node name="MovingPlatform3" parent="." instance=ExtResource("13_mvplat")]
+position = Vector2(526, 553)
+distance = 50.0
+
+[node name="coin" parent="." instance=ExtResource("2_coin")]
+position = Vector2(30, 513)
+
+[node name="coin2" parent="." instance=ExtResource("2_coin")]
+position = Vector2(238, 513)
+
+[node name="coin3" parent="." instance=ExtResource("2_coin")]
+position = Vector2(430, 513)
+
+[node name="coin4" parent="." instance=ExtResource("2_coin")]
+position = Vector2(622, 513)
+
+[node name="coin5" parent="." instance=ExtResource("2_coin")]
+position = Vector2(750, 369)
+
+[node name="coin6" parent="." instance=ExtResource("2_coin")]
+position = Vector2(878, 369)
+
+[node name="coin7" parent="." instance=ExtResource("2_coin")]
+position = Vector2(990, 289)
+
+[node name="coin8" parent="." instance=ExtResource("2_coin")]
+position = Vector2(1342, 161)
+
+[node name="Saw" parent="." instance=ExtResource("4_saw")]
+position = Vector2(188, 521)
+
+[node name="Saw2" parent="." instance=ExtResource("4_saw")]
+position = Vector2(570, 521)
+
+[node name="шипы" parent="." instance=ExtResource("3_spikes")]
+position = Vector2(77, 577)
+
+[node name="шипы2" parent="." instance=ExtResource("3_spikes")]
+position = Vector2(381, 577)
+
+[node name="шипы3" parent="." instance=ExtResource("3_spikes")]
+position = Vector2(573, 577)
+
+[node name="шипы4" parent="." instance=ExtResource("3_spikes")]
+position = Vector2(765, 577)
+
+[node name="finish" type="Area2D" parent="."]
+position = Vector2(1406, 174)
+script = ExtResource("9_finish")
+next_level_path = "res://сцены/level_8.tscn"
+level_number = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="finish"]
+shape = SubResource("RectangleShape2D_finish")
+
+[node name="TeleportPortal" parent="." instance=ExtResource("10_portal")]
+position = Vector2(1406, 162)
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2(-52, 23)
+scale = Vector2(5.41, 5.66)
+texture = ExtResource("6_bg")
+region_enabled = true
+region_rect = Rect2(0, 0, 4000, 1000)
+
+[node name="PauseUI" parent="." instance=ExtResource("7_pause")]
+
+[node name="MobileControls" parent="." instance=ExtResource("8_mobile")]
+
+[node name="LevelMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_music")
+bus = &"Music"
+autoplay = true
+
+[connection signal="body_entered" from="finish" to="finish" method="_on_body_entered"]

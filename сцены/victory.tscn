@@ -1,0 +1,158 @@
+[gd_scene format=4 uid="uid://victory000001"]
+
+[ext_resource type="Script" path="res://scripts/victory.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://ctjm0uyn4p7wr" path="res://Free/Background/Green.png" id="2_bg"]
+[ext_resource type="FontFile" uid="uid://c5r2kjnvtvq1" path="res://Free/VMVTZARCARI-Regular.otf" id="3_font"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font = ExtResource("3_font")
+font_size = 100
+font_color = Color(1, 0.9, 0.1, 1)
+outline_size = 10
+outline_color = Color(0, 0, 0, 0.7)
+shadow_color = Color(0, 0.5, 0, 0.5)
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="LabelSettings" id="LabelSettings_sub"]
+font = ExtResource("3_font")
+font_size = 52
+font_color = Color(1, 1, 1, 1)
+outline_size = 6
+outline_color = Color(0, 0, 0, 0.55)
+
+[sub_resource type="LabelSettings" id="LabelSettings_made"]
+font = ExtResource("3_font")
+font_size = 36
+font_color = Color(0.8, 1.0, 0.8, 0.9)
+outline_size = 4
+outline_color = Color(0, 0, 0, 0.4)
+
+[node name="Victory" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+
+[node name="Vignette" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.25)
+
+[node name="TitleLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -600.0
+offset_top = 60.0
+offset_right = 600.0
+offset_bottom = 200.0
+grow_horizontal = 2
+text = "YOU WIN!"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -500.0
+offset_top = 205.0
+offset_right = 500.0
+offset_bottom = 300.0
+grow_horizontal = 2
+text = "ALL 10 LEVELS COMPLETE!"
+label_settings = SubResource("LabelSettings_sub")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CoinsLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 315.0
+offset_right = 400.0
+offset_bottom = 395.0
+grow_horizontal = 2
+text = "COINS COLLECTED: 0"
+label_settings = SubResource("LabelSettings_sub")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MadeByLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 540.0
+offset_right = 400.0
+offset_bottom = 600.0
+grow_horizontal = 2
+text = "Made by Yusuf Games"
+label_settings = SubResource("LabelSettings_made")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonsRow" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -90.0
+offset_right = 280.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="MenuButton" type="Button" parent="ButtonsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(220, 60)
+text = "MAIN MENU"
+
+[node name="AgainButton" type="Button" parent="ButtonsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(220, 60)
+text = "PLAY AGAIN"
+
+[node name="FadeRect" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
